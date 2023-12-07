@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Pizza and Add to Cart</title>
+</head>
+<body>
+<h1>Create Your Pizza</h1>
+
+<form id="createPizzaForm">
+  <label for="pizzaId">Pizza ID:</label>
+  <input type="text" id="pizzaId" name="pizzaId" required><br>
+
+  <label for="pizzaName">Pizza Name:</label>
+  <input type="text" id="pizzaName" name="pizzaName" required><br>
+
+  <label for="toppings">Toppings (comma-separated):</label>
+  <input type="text" id="toppings" name="toppings" required><br>
+
+  <button type="button" onclick="createAndAddToCart()">Create Pizza and Add to Cart</button>
+</form>
+
+<h2>Shopping Cart</h2>
+<ul id="cartList"></ul>
+
+<script>
+  function createAndAddToCart() {
+    const pizzaId = document.getElementById('pizzaId').value;
+    const pizzaName = document.getElementById('pizzaName').value;
+    const toppings = document.getElementById('toppings').value.split(',');
+
+    // Відправка POST-запиту для створення та додавання піци до кошика
+    fetch(`/pizza/add-pizza/${pizzaId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: pizzaName,
+        toppings: toppings,
+      }),
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('Pizza created and added to cart:', data);
+              updateCartList();
+            })
+            .catch(error => console.error('Error:', error));
+  }
+
+  function updateCartList() {
+    // Оновлення списку корзини
+    fetch('/pizza/get-cart')
+            .then(response => response.json())
+            .then(data => {
+              console.log('Shopping Cart:', data);
+              displayCart(data);
+            })
+            .catch(error => console.error('Error:', error));
+  }
+
+  function displayCart(cart) {
+    // Відображення списку корзини на сторінці
+    const cartList = document.getElementById('cartList');
+    cartList.innerHTML = '';
+
+    cart.forEach(pizza => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `Pizza ID: ${pizza.id}, Name: ${pizza.name}`;
+      cartList.appendChild(listItem);
+    });
+  }
+</script>
+</body>
+</html>

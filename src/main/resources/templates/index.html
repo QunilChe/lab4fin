@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Ordering App</title>
+</head>
+<body>
+<h1>Welcome to Pizza Ordering App</h1>
+
+<h2>Get Pizza by ID</h2>
+<form id="getPizzaForm">
+    <label for="pizzaId">Pizza ID:</label>
+    <input type="text" id="pizzaId" name="pizzaId" required>
+    <button type="button" onclick="getPizza()">Get Pizza</button>
+</form>
+<div id="pizzaResult"></div>
+
+<h2>Add Ingredient to Pizza</h2>
+<form id="addIngredientForm">
+    <label for="pizzaIdIngredient">Pizza ID:</label>
+    <input type="text" id="pizzaIdIngredient" name="pizzaIdIngredient" required>
+    <label for="ingredient">Ingredient:</label>
+    <input type="text" id="ingredient" name="ingredient" required>
+    <button type="button" onclick="addIngredient()">Add Ingredient</button>
+</form>
+
+<h2>Get All Pizzas</h2>
+<button type="button" onclick="getAllPizzas()">Get All Pizzas</button>
+<div id="allPizzasResult"></div>
+
+<script>
+    function getPizza() {
+        const pizzaId = document.getElementById('pizzaId').value;
+
+        fetch(`/pizza/get/${pizzaId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Pizza:', data);
+                // Відобразіть отримані дані на сторінці або виконайте інші дії
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function addIngredient() {
+        const pizzaId = document.getElementById('pizzaIdIngredient').value;
+        const ingredient = document.getElementById('ingredient').value;
+
+        fetch(`/pizza/add-ingredient/${pizzaId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ingredient }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Ingredient added:', data);
+                // Відобразіть отримані дані на сторінці або виконайте інші дії
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function getAllPizzas() {
+        fetch('/pizza/get-all-pizzas')
+            .then(response => response.json())
+            .then(data => {
+                console.log('All Pizzas:', data);
+                // Відобразіть отримані дані на сторінці або виконайте інші дії
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>
