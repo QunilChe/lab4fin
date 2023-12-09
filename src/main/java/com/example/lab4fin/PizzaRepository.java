@@ -32,11 +32,9 @@ public class PizzaRepository implements CrudRepository<Pizza, Long> {
         pizzaDatabase.remove(id);
     }
 
-    // Інші методи CRUD
 
     private Long generateId() {
-        // Логіка генерації нового ідентифікатора (наприклад, може бути залежно від поточного часу)
-        // Це приклад, і ви можете вибрати інший спосіб генерації ідентифікатора
+
         return System.currentTimeMillis();
     }
     @Override

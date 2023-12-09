@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingCart {
-    private List<Pizza> pizzas = new ArrayList<>();
+    private final List<Pizza> pizzas = new ArrayList<>();
 
     public void addPizza(Pizza pizza) {
         pizzas.add(pizza);
